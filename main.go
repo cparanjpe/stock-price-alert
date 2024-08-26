@@ -2,8 +2,9 @@ package main
 
 import (
     "btcusdt-alert/websocket"
-    // "btcusdt-alert/database"
+    "btcusdt-alert/database"
 	"btcusdt-alert/api"
+	"btcusdt-alert/alert"
 	"net/http"
 	"log"
     "fmt"
@@ -17,6 +18,10 @@ func main() {
 
     // Start the WebSocket connection and listen to price updates
     // websocket.StartBinanceWebSocket()
+	alert.InitRedis()
+	if err := database.InitDB(); err != nil {
+        log.Fatalf("Error initializing database: %v", err)
+    }
 	go websocket.StartBinanceWebSocket()
 	router := api.SetupRoutes()
 

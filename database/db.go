@@ -1,31 +1,23 @@
 package database
 
 import (
-    "fmt"
     "database/sql"
-    _ "github.com/lib/pq"
+    _ "github.com/go-sql-driver/mysql" // Import the MySQL driver
 )
 
-var db *sql.DB
+var DB *sql.DB
 
-func InitDB() {
+func InitDB() error {
     var err error
-    connStr := "user=username dbname=mydb sslmode=disable"
-    db, err = sql.Open("postgres", connStr)
+    DB, err = sql.Open("mysql", "root:root@tcp(localhost:3306)/price_alert_system")
     if err != nil {
-        fmt.Println("Error connecting to the database:", err)
-        return
+        return err
     }
 
-    err = db.Ping()
-    if err != nil {
-        fmt.Println("Database connection is not alive:", err)
-        return
+    // Check if the database connection is available
+    if err = DB.Ping(); err != nil {
+        return err
     }
 
-    fmt.Println("Database connection established successfully.")
-}
-
-func GetDB() *sql.DB {
-    return db
+    return nil
 }
