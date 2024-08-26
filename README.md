@@ -1,4 +1,4 @@
-Here's a comprehensive `README.md` file that includes all the necessary details to get your Go project up and running:
+Here's a comprehensive `README.md` file that includes all the necessary details to get this Go project up and running:
 
 ---
 
