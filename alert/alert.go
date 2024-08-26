@@ -96,7 +96,33 @@ func storeAlertInDB(alert Alert) {
 }
 // GetAlerts returns the list of all current alerts
 func GetAlerts() []Alert {
-    return Alerts
+    var alerts []Alert
+
+    // Define the query
+    query := "SELECT user_id, value, direction, indicator, alerted FROM alerts"
+
+    // Execute the query
+    rows, err := database.DB.Query(query)
+    if err != nil {
+        fmt.Printf("err occured in get api",err)
+    }
+    defer rows.Close()
+
+    // Iterate over the results
+    for rows.Next() {
+        var alert Alert
+        if err := rows.Scan(&alert.UserID, &alert.Value, &alert.Direction, &alert.Indicator, &alert.Alerted); err != nil {
+            fmt.Printf("error scanning alert: %v", err)
+        }
+        alerts = append(alerts, alert)
+    }
+
+    // Check for errors encountered during iteration
+    if err := rows.Err(); err != nil {
+        fmt.Printf("error iterating over alerts: %v", err)
+    }
+
+    return alerts
 }
 
 // ProcessAlerts checks if any alert conditions are met and triggers notifications
