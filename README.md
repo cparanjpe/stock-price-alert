@@ -97,49 +97,7 @@ With everything set up, you can run the Go application:
 go run main.go
 ```
 
-## MySQL Schema
 
-Here’s the schema for the `alerts` table used in this project:
-
-```sql
-CREATE TABLE alerts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(255) NOT NULL,
-    value FLOAT NOT NULL,
-    direction ENUM('up', 'down') NOT NULL,
-    indicator ENUM('rsi', 'macd') NOT NULL,
-    alerted BOOLEAN NOT NULL DEFAULT FALSE,
-    UNIQUE KEY unique_alert (user_id, value, direction, indicator)
-);
-```
-
-## Docker Commands
-
-To set up and run Redis using Docker:
-
-1. Pull the Redis image:
-
-    ```bash
-    docker pull redis
-    ```
-
-2. Run the Redis container:
-
-    ```bash
-    docker run --name redis-server -p 6379:6379 -d redis
-    ```
-
-3. To stop the Redis container:
-
-    ```bash
-    docker stop redis-server
-    ```
-
-4. To remove the Redis container:
-
-    ```bash
-    docker rm redis-server
-    ```
 
 ## Project Structure
 
