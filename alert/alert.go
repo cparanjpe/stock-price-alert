@@ -95,16 +95,21 @@ func storeAlertInDB(alert Alert) {
     }
 }
 // GetAlerts returns the list of all current alerts
-func GetAlerts() []Alert {
+func GetAlerts(userID string) []Alert {
     var alerts []Alert
-
+    fmt.Printf("userID",userID);
+    
     // Define the query
     query := "SELECT user_id, value, direction, indicator, alerted FROM alerts"
-
+    if userID != "" {
+        query += " WHERE user_id = ?"
+    }
+    
     // Execute the query
-    rows, err := database.DB.Query(query)
+    rows, err := database.DB.Query(query, userID)
     if err != nil {
-        fmt.Printf("err occured in get api",err)
+        fmt.Printf("error occurred in get api: %v\n", err)
+        return alerts
     }
     defer rows.Close()
 
@@ -112,18 +117,19 @@ func GetAlerts() []Alert {
     for rows.Next() {
         var alert Alert
         if err := rows.Scan(&alert.UserID, &alert.Value, &alert.Direction, &alert.Indicator, &alert.Alerted); err != nil {
-            fmt.Printf("error scanning alert: %v", err)
+            fmt.Printf("error scanning alert: %v\n", err)
         }
         alerts = append(alerts, alert)
     }
 
     // Check for errors encountered during iteration
     if err := rows.Err(); err != nil {
-        fmt.Printf("error iterating over alerts: %v", err)
+        fmt.Printf("error iterating over alerts: %v\n", err)
     }
 
     return alerts
 }
+
 
 // ProcessAlerts checks if any alert conditions are met and triggers notifications
 

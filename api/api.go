@@ -37,11 +37,29 @@ func AddAlertHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(addedAlert)
 }
 
+type AlertRequest struct {
+    UserID string `json:"user_id"`
+}
 
 func GetAlertsHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(alert.GetAlerts())
+
+    
+    var req AlertRequest
+    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+
+    // Get alerts based on user_id
+    alerts := alert.GetAlerts(req.UserID)
+
+    // Encode the result as JSON and send it to the client
+    if err := json.NewEncoder(w).Encode(alerts); err != nil {
+        http.Error(w, "Unable to encode response", http.StatusInternalServerError)
+    }
 }
+
 
 func helloWorld(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
@@ -52,7 +70,7 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/",helloWorld).Methods("GET")
     r.HandleFunc("/alerts", AddAlertHandler).Methods("POST")
-    r.HandleFunc("/alerts", GetAlertsHandler).Methods("GET")
+    r.HandleFunc("/getAlerts", GetAlertsHandler).Methods("POST")
     // r.HandleFunc("/alerts/{id}", DeleteAlertHandler).Methods("DELETE")
 
     return r
