@@ -107,5 +107,147 @@ go run main.go
 - `notifier/notifier.go`: Contains logic for notifying users when an alert is triggered.
 
 ---
+To create a `README.md` file for documenting your API, you should include sections that provide an overview of the API, details on how to use each endpoint, and any relevant information about request and response formats. Here's a sample `README.md` that documents your API based on the provided code:
+
+```markdown
+# Alert Management API
+
+This API allows you to manage alerts, including adding new alerts and retrieving existing ones based on user IDs.
+
+## Base URL
+
+The base URL for the API is `http://localhost:8080`.
+
+## Endpoints
+
+### 1. Hello World
+
+**GET /**
+
+Returns a simple "Hello, World!" message.
+
+#### Example Request
+
+```http
+GET / HTTP/1.1
+Host: localhost:8080
+```
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+Hello, World!
+```
+
+### 2. Add Alert
+
+**POST /alerts**
+
+Adds a new alert.
+
+#### Request Body
+
+The request body must be a JSON object with the following fields:
+
+```json
+{
+  "user_id": "string",
+  "value": "number",
+  "direction": "up|down",
+  "indicator": "rsi|macd"
+}
+```
+
+- `user_id` (string): The ID of the user associated with the alert.
+- `value` (number): The spot value of BTCUSDT
+- `direction` (string): The direction of the alert. Valid values are `up` or `down`.
+- `indicator` (string): The indicator type. Valid values are `rsi` or `macd`.
+
+#### Example Request
+
+```http
+POST /alerts HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "user_id": "user123",
+  "value": 63000,
+  "direction": "up",
+  "indicator": "rsi"
+}
+```
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "user_id": "user123",
+  "value": 63000,
+  "direction": "up",
+  "indicator": "rsi"
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request**: Invalid request payload or invalid field values.
+
+### 3. Get Alerts
+
+**POST /getAlerts**
+
+Retrieves alerts based on the provided user ID.
+
+#### Request Body
+
+The request body must be a JSON object with the following field:
+
+```json
+{
+  "user_id": "string"
+}
+```
+
+- `user_id` (string): The ID of the user for whom to retrieve alerts.
+
+#### Example Request
+
+```http
+POST /getAlerts HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "user_id": "user123"
+}
+```
+
+#### Example Response
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "user_id": "user123",
+    "value": 63000,
+    "direction": "up",
+    "indicator": "rsi",
+    "id": 1
+  }
+]
+```
+
+
+
+
 
 By following these instructions, you should be able to set up and run the BTC/USDT Price Alert System on your local machine. If you encounter any issues, please consult the documentation or reach out for support.
